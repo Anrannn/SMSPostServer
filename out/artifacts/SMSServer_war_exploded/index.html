@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"></head>
+    <style>
+        .content{
+            margin-top: 10rem;
+        }
+        .username,.password{
+            margin: 1rem;
+        }
+    </style>
+<body>
+
+<div class="container-fluid content">
+    <div class="row">
+        <div class="col-md-4 col-xs-10 col-md-push-4 col-xs-push-1 username">
+            <input type="text" name="username" id="username" class="form-control"  placeholder="账号">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-xs-10 col-md-push-4 col-xs-push-1 password">
+            <input type="password" name="password" id="password" class="form-control"  placeholder="密码">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-push-5 col-xs-5 col-xs-push-3 btn btn-success" id="login">登陆</div>
+    </div>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<script src="js/jquery.md5.js"></script>
+
+<script>
+    $(function (){
+        let token = localStorage.getItem("token");
+        if (token!=null&&token!==""){
+          if (!(token.indexOf("ERROR")>=0)){
+            window.location.replace("table.html");
+          }
+        }
+
+        let login = $("#login")
+        login.click(function (){
+            let usernmae =  $("#username").val();
+            let password = $.md5($("#password").val());
+            $.ajax({
+                type:"get",
+                url:"LoginServlet",
+                timeout:10000,
+                cache:false,
+                data:"username="+usernmae+"&&"+"passwd="+password,
+                success:function (res) {
+                    if (res!=null&&res!=""){
+                        if (!((res.indexOf("ERROR"))>=0)) {
+                            localStorage.setItem("token",res);
+                            // localStorage.setItem("token", res);
+                            window.location.replace("table.html");
+                        }else {
+                            alert(res);
+                        }
+                    }
+                }
+
+            })
+        })
+
+    })
+</script>
+
+</body>
+
+</html>

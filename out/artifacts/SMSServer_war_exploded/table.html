@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="">
+    <center>
+        <div>在线状态: <span id="inline"></span></div>
+        <table id="table" cellspacing="2px" border="2px" cellpadding="15px">
+            <tr id="title">
+                <td>发信人</td>
+                <td>内容</td>
+                <td>时间</td>
+            </tr>
+        </table>
+    </center>
+</form>
+
+
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script>
+    $(function (){
+        let token = localStorage.getItem("token");
+        if (token!=null&&token!=="") {
+            if (!(token.indexOf("ERROR")>=0)) {
+                $.ajax({
+                    type: "post",
+                    url: "SmsServlet",
+                    cache: false,
+                    data: "token=" + token,
+                    success: function (res) {
+                        if (res != null) {
+                            if ((res.indexOf("ERROR"))>=0){
+                                localStorage.removeItem("token");
+                                window.location.replace("index.html");
+
+                            }else if (res.length > 0) {
+                                let html = ""
+                                $.each(JSON.parse(res), function (i, obj) {
+                                    html += "<tr>";
+                                    html += "<td>" + obj.phoneNumber + "</td>td>";
+                                    html += "<td>" + obj.content + "</td>td>";
+                                    html += "<td>" + obj.Date + "</td>td>";
+                                    html += "</tr>";
+                                })
+                                $(html).appendTo($("#table").children());
+                            }
+                        }
+                    }
+
+
+                })
+                $.ajax({
+                    type:"get",
+                    data: "flag=table",
+                    url:"BeatServlet",
+                    cache: false,
+                    success:function (res){
+                        if (res!=null){
+                            console.log(res)
+                            var obj = JSON.parse(res);
+                            console.log(obj.online);
+                            $("#inline").text(obj.online);
+
+                        }
+                    }
+                })
+            }else {
+                alert(token);
+                localStorage.removeItem("token");
+                window.location.replace("index.html");
+            }
+        }else {
+            alert("无令牌");
+            window.location.replace("index.html");
+        }
+    })
+
+</script>
+</html>

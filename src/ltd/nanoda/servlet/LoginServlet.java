@@ -7,6 +7,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,8 +52,11 @@ public class LoginServlet extends HttpServlet {
         user.setPassWd(password);
         if (this.loginService.checkUserInfo(user) == 1) {
             try {
+                Map map = new TreeMap();
+                map.put("signer", UUID.randomUUID());
+                map.put("username",username);
 
-                String token = JwtUtil.generate();
+                String token = JwtUtil.generate(map);
                 response.getWriter().println(token);
 
             } catch (Exception e) {
@@ -87,9 +93,9 @@ public class LoginServlet extends HttpServlet {
 //                Algorithm algorithm = Algorithm.HMAC256("10086cnm");
 //                String token = JWT.create().withIssuer("inxtes").sign(algorithm);
 //                SecretKey key = Keys.secretKeyFor(SignatureAlgorithm)
-                String token =  JwtUtil.generate();
+//                String token =  JwtUtil.generate();
 
-                response.getWriter().println(token);
+//                response.getWriter().println(token);
 
             } catch (Exception e) {
                 response.getWriter().println("ERROR 002");

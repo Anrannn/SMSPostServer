@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
-    private static final long EXPIRE = 60000*10;
+    private static final long EXPIRE = 60000*60*24;
     public static final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);//密钥，动态生成的密钥
 
-    public static String generate() {
+    public static String generate(Map<Object,Object> claims) {
         Date nowDate = new Date();
         //过期时间,设定为一分钟
         Date expireDate = new Date(System.currentTimeMillis() + EXPIRE);
@@ -37,10 +37,10 @@ public class JwtUtil {
                      .parseClaimsJws(token);
              return true;
          }catch (JwtException e){
-             e.printStackTrace();
              return false;
          }
     }
+
 
     /**
      * 获取payload 部分内容（即要传的信息）

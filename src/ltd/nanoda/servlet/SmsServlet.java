@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import ltd.nanoda.Code;
 import ltd.nanoda.JwtUtil;
 import ltd.nanoda.model.Message;
@@ -53,11 +54,10 @@ public class SmsServlet extends HttpServlet {
 
 
             } catch (Exception e) {
-                response.getWriter().println("ERROR 001 -Token失效");
-                e.printStackTrace();
+                response.getWriter().println(Code.E001);
             }
         } else {
-            response.getWriter().println("ERROR 003 - NOT HAVE TOKEN!");
+            response.getWriter().println(Code.E004);
         }
 
     }
@@ -77,25 +77,30 @@ public class SmsServlet extends HttpServlet {
 //                JWTVerifier verifier = JWT.require(algorithm).withIssuer("inxtes").acceptLeeway(10L).acceptExpiresAt(3600L).build();
 //                verifier.verify(token);
 
-                JwtUtil.verify(token);
-                String json;
-                if (JwtUtil.isExpired(token)){
-                    throw  new Exception("token过期");
+                if (JwtUtil.verify(token)) {
+
+                    String  issuer = JwtUtil.getClaim(token).getIssuer();
+                    if (issuer.equals("ltd.nanoda")) {
+
+
+                        String json;
+                        List<Message> list = this.messageService.getAllMsg();
+                        json = new Gson().toJson(list);
+
+
+                        //输出数据
+                        response.getWriter().println(json);
+                    }else {
+                        response.getWriter().println(Code.E005);
+                    }
                 }else {
-
-                    List<Message> list = this.messageService.getAllMsg();
-                    json = new Gson().toJson(list);
+                    throw new Exception("token无效");
                 }
-
-
-                //输出数据
-                response.getWriter().println(json);
 
 //                request.setAttribute("list", list);
 //                request.getRequestDispatcher("table.jsp").forward(request, response);
             } catch (Exception e) {
                 response.getWriter().println(Code.E001);
-                e.printStackTrace();
             }
         } else {
             response.getWriter().println(Code.E004);

@@ -1,25 +1,18 @@
 
 package ltd.nanoda.servlet;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import ltd.nanoda.Code;
-import ltd.nanoda.JwtUtil;
+import ltd.nanoda.Util.JwtUtil;
 import ltd.nanoda.model.Message;
 import ltd.nanoda.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;

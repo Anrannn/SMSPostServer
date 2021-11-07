@@ -28,7 +28,6 @@ public class BeatServlet extends HttpServlet {
                 System.out.println(nowTime - BeatDate.getLastLoginTime());
                 if ((nowTime - BeatDate.getLastLoginTime()) > 60000*10) {
                     //登录过期
-
                     device.setOnline("不在线");
                     BeatDate.setLastLoginTime(0);
 

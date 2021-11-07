@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="war" name="SMSServer:war">
-    <output-path>$PROJECT_DIR$/out/artifacts/SMSServer_war</output-path>
+    <output-path>$USER_HOME$/opt/tomcat/webapps/</output-path>
     <root id="archive" name="SMSServer_war.war">
       <element id="artifact" artifact-name="SMSServer:war exploded" />
     </root>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="#" id="back">\..</a>
+    <table>
+        <div id="folder">
+        </div>
+    </table>
+    <table>
+        <div id="file"></div>
+
+    </table>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/javascript-state-machine/3.1.0/state-machine-history.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script>
+
+    $(function (){
+        showFile("/file")
+    })
+    let pathList = new Array();
+    function showFile(path){
+        $("#folder").children().remove()
+        $("#file").children().remove();
+
+        $.ajax({
+            url:"FileServlet",
+            method:"get",
+            cache:false,
+            data:{path:path},
+            success:function (res){
+                console.log(res);
+                var json = JSON.parse(res);
+                if (json.type==="OK") {
+                    var fileCollection = json.fileCollection;
+                    var folderCollection = json.folderCollection;
+                    //遍历列表
+                    $.each(folderCollection.folders, function (index, object) {
+                        /*/file/"+object.folderName+"*/
+                        $("#folder").append("<tr><td><a href='#' id='" + object.folderName + "'>" + object.folderName + "</td></tr>");
+                        $('#' + object.folderName + '').click(function () {
+                            pathList.push(path)
+                            $("#back").unbind()
+                            $("#back").click(function () {
+                                showFile(pathList[pathList.length-1]);
+                                if (!(pathList.length<=1)){
+                                    pathList.splice(pathList.length-1);
+                                }
+                            })
+                            showFile(object.folderPath)
+                        })
+                    })
+
+                    $.each(fileCollection.files, function (index, object) {
+                        /*/file/"+object.folderName+"*/
+                        $("#file").append("<tr><td><a href='" + object.filePath + "' id='" + object.fileName + "' download='" + object.fileName + "'>" + object.fileName + "</td></tr>");
+
+                    })
+                }else {
+                    $("#folder").children().remove()
+                    $("#file").children().remove();
+                }
+
+
+
+                // $.each(JSON.parse(res),function (idx,obj){
+                //     if (obj.type==="folder"){
+                //         for (const item in obj.folders){
+                //
+                //             console.log(item.folderName)
+                //         }
+                //     }
+                // })
+            }
+
+        })
+    }
+</script>
+</html>

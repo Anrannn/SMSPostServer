@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,body{
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            overflow:hidden;
+        }
+        .loading{
+            height: 100%;
+            width: 100%;
+            z-index: 100;
+            display: none;
+
+        }
+    </style>
+</head>
+<body>
+<form   enctype='multipart/form-data' id="upLoad" method="POST">
+    <input type="file" name="file" id="file" >
+</form>
+<button id="submit" onclick="upLoad()">上传</button>
+
+<div class="loading">
+    <center>
+    <h1 class="title">UPLOADING</h1>
+    </center>
+</div>
+
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/javascript-state-machine/3.1.0/state-machine-history.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script>
+
+    function upLoad(){
+        var formData = new FormData($("#upLoad")[0]);
+        formData.append("file",$("#file")[0].files[0])
+        $.ajax({
+            url:"FileServlet",
+            type:"POST",
+            data:formData,
+            async:false,
+            processData: false,
+            contentType: false,
+            cache:false,
+            success:function (res){
+                alert(res);
+            }
+
+        })
+    }
+
+
+</script>
+</html>

@@ -20,7 +20,7 @@ import java.util.Locale;
 })
 @MultipartConfig
 public class FileServlet extends HttpServlet {
-    private static final String ROOTPATH = "/home/nete";//跟目录
+    private static final String ROOTPATH = "/root/";//跟目录
 
 
     @Override
